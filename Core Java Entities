@@ -1,0 +1,42 @@
+@Entity
+@Table(name = "products")
+public class Product {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    @Column(unique = true, nullable = false)
+    private String sku;
+    
+    @Column(nullable = false)
+    private String name;
+    
+    @Column(nullable = false)
+    private BigDecimal price;
+    
+    @Column(name = "product_type", nullable = false)
+    private String productType = "standard";
+    
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
+}
+
+@Entity
+@Table(name = "inventory", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"product_id", "warehouse_id"})
+})
+public class Inventory {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+    
+    @ManyToOne 
+    @JoinColumn(name = "warehouse_id")
+    private Warehouse warehouse;
+    
+    @Column(nullable = false)
+    private Integer quantity = 0;
+}
